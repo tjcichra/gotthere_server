@@ -11,4 +11,5 @@ CREATE TABLE locations2 (
 	speed DECIMAL(5,2)
 );
 
-CREATE USER 'remote'@'%' identified by 'test';
+CREATE USER 'remote'@'%' IDENTIFIED BY 'test';
+GRANT ALL ON gotthere_database TO 'remote'@'%';

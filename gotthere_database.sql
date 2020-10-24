@@ -10,3 +10,5 @@ CREATE TABLE locations2 (
 	longitude DECIMAL(5,2),
 	speed DECIMAL(5,2)
 );
+
+CREATE USER 'remote'@% identified by 'test';

@@ -11,4 +11,4 @@ CREATE TABLE locations2 (
 	speed DECIMAL(5,2)
 );
 
-CREATE USER 'remote'@% identified by 'test';
+CREATE USER 'remote'@'%' identified by 'test';

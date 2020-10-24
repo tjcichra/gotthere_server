@@ -12,4 +12,4 @@ CREATE TABLE locations (
 );
 
 CREATE USER 'remote'@'%' IDENTIFIED BY 'test';
-GRANT ALL ON gotthere_database TO 'remote'@'%';
+GRANT ALL ON gotthere_database.locations TO 'remote'@'%';

@@ -62,7 +62,7 @@ public class GotthereDatabase implements CommandLineRunner {
 
 							template.update("INSERT INTO locations (bearing, latitude, longitude, speed) VALUES (?, ?, ?, ?)", bearing, latitude, longitude, speed);
 						} else {
-							log.info("Input EOF");
+							break;
 						}
 					} catch (Exception e) {
 						e.printStackTrace();

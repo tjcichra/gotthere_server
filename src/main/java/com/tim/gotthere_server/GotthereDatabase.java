@@ -19,6 +19,9 @@ public class GotthereDatabase implements CommandLineRunner {
 	@Autowired
 	private JdbcTemplate template;
 
+	@Autowired
+	private GreetingController greeting;
+
 	@Override
 	public void run(String... args) throws Exception {
 		ServerSocket server = new ServerSocket(2810);
@@ -61,6 +64,8 @@ public class GotthereDatabase implements CommandLineRunner {
 							System.out.println("Bearing: " + bearing + " Latitude: " + latitude + " Longitude: " + longitude + " Speed: " + speed);
 
 							template.update("INSERT INTO locations (bearing, latitude, longitude, speed) VALUES (?, ?, ?, ?)", bearing, latitude, longitude, speed);
+
+							greeting.autoSendingMessage(bearing, latitude, longitude, speed);
 						} else {
 							break;
 						}

@@ -1,4 +1,5 @@
 var stompClient = null;
+var map = null;
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
@@ -19,7 +20,7 @@ function connect() {
         //setConnected(true);
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/greetings', function (greeting) {
-            console.log("Tanner isn't real");
+            console.log("Got message");
             showGreeting(JSON.parse(greeting.body));
             console.log(greeting);
         });
@@ -34,12 +35,22 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
-    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
-}
+//Gets the start and end date-times and sends them out as a JSON message to the server.
+function requestLocations() {
+    var startDateTimeL = document.getElementById("startdatetime").value;
+    var endDateTimeL = document.getElementById("enddatetime").value;
 
-function showGreeting(location) {
-    $("#timmy").append("" + location.latitude + "," + location.longitude + "<br/>");
+    //Only continue if start date-time is before the end date-time.
+    if(startDateTimeL < endDateTimeL) {
+        var requestObject = {
+            startDateTime: startDateTimeL,
+            endDateTime: endDateTimeL
+        };
+
+        stompClient.send("/app/hello", {}, JSON.stringify(requestObject));
+    } else {
+        $("#locations").append("Cannot have start time be after end time.<br/>");
+    }
 }
 
 $(function () {
@@ -49,5 +60,5 @@ $(function () {
     //$( "#connect" ).click(function() { connect(); });
     //$( "#disconnect" ).click(function() { disconnect(); });
     //$( "#send" ).click(function() { sendName(); });
-    connect();
+    
 });

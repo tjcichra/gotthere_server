@@ -8,7 +8,7 @@
 		<script src="/webjars/jquery/jquery.min.js"></script>
 		<script src="/webjars/sockjs-client/sockjs.min.js"></script>
 		<script src="/webjars/stomp-websocket/stomp.min.js"></script>
-		<script src="/websocketmanagement.js"></script>
+		<script src="/websocket.js"></script>
 
 		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
 	</head>
@@ -16,21 +16,46 @@
 		<div id='map' style='width: 400px; height: 300px;'></div>
 		<script>
 			mapboxgl.accessToken = 'pk.eyJ1IjoicmFpbmJvd2x1aWdpMjgxIiwiYSI6ImNrZ2ZxMWE3dTBxZDQyeHBheWUyMXhhamkifQ.asrVZzC3ppQBhZt0R4Bh-A';
-			var map = new mapboxgl.Map({
+			map = new mapboxgl.Map({
 				container: 'map',
-				style: 'mapbox://styles/mapbox/streets-v11'
+				style: 'mapbox://styles/mapbox/satellite-streets-v11'
 			});
+
+			var marker = new mapboxgl.Marker().setLngLat([12.550343, 55.665957]).addTo(map);
+
+			
+
+			function showGreeting(location) {
+				$("#locations").append("" + location.latitude + "," + location.longitude + "<br/>");
+				var marker2 = new mapboxgl.Marker().setLngLat([location.longitude, location.latitude]).addTo(map);
+			}
 		</script>
 
 		<label for="starttime">Start Time: </label>
-		<input type="datetime-local" id="starttime" name="time">
+		<input type="datetime-local" id="startdatetime" name="time" onchange="requestLocations()">
 		<label for="endtime">End Time: </label>
-		<input type="datetime-local" id="endtime" name="time">
+		<input type="datetime-local" id="enddatetime" name="time" onchange="requestLocations()">
 		<label for="follow">Follow: </label>
 		<input type="checkbox" id="follow" name="follow">
 
-		<p id="timmy">
+		<p id="locations">
 			Locations:<br>
 		</p>
+
+		<script>
+			connect();
+
+			var today = new Date();
+
+			//today.getMonth() returns 0-11. "today.getMonth() < 9" is the equivalent to "today.getMonth() + 1 < 10".
+			var monthStringPre = today.getMonth() < 9 ? "0" : "";
+			var dayStringPre = today.getDate() < 10 ? "0" : "";
+
+			var dateString = today.getFullYear() + "-" + monthStringPre + (today.getMonth() + 1) + "-" + dayStringPre + today.getDate();
+
+			console.log(dateString);
+			document.getElementById("startdatetime").defaultValue = dateString + "T00:00:00.00";
+			document.getElementById("enddatetime").defaultValue = dateString + "T23:59:59.00";
+		</script>
 	</body>
 </html>

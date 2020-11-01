@@ -15,6 +15,9 @@ public class GreetingController {
     
     @Autowired
     private SimpMessagingTemplate template;
+
+    @Autowired
+    private GotthereDatabase databaseController;
     
     @GetMapping("/greeting")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
@@ -23,10 +26,10 @@ public class GreetingController {
     }
 
     @MessageMapping("/hello")
-    @SendTo("/topic/greetings")
-    public MessageSent greeting(MessageRecieved message) throws Exception {
-        Thread.sleep(1000); // simulated delay
-        return new MessageSent("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+    @SendTo("/topic/greetings2")
+    public MessageSent greeting(LocationsRequest message) throws Exception {
+        System.out.println(message.getStartDateTime() + " " + message.getEndDateTime());
+        return new MessageSent("Hello, ");
     }
 
     public void autoSendingMessage(double bearing, double latitude, double longitude, double speed) throws Exception {

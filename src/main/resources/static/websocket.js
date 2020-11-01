@@ -1,5 +1,6 @@
 var stompClient = null;
 var map = null;
+var markers = [];
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
@@ -20,9 +21,29 @@ function connect() {
         //setConnected(true);
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/greetings', function (greeting) {
-            console.log("Got message");
-            showGreeting(JSON.parse(greeting.body));
+            var startDateTimeL = document.getElementById("startdatetime").value;
+            var endDateTimeL = document.getElementById("enddatetime").value;
+
+            var location = JSON.parse(greeting.body);
+
+            if(location.dateTime >= startDateTimeL && location.dateTime <= endDateTimeL) {
+                markLocation(location);
+
+                var isFollowing = document.getElementById("follow").checked;
+
+                if(isFollowing) {
+                    centerMap(location);
+                }
+            }
             console.log(greeting);
+        });
+
+        stompClient.subscribe('/topic/greetings2', function (greeting) {
+            markers.forEach(marker => marker.remove());
+            console.log("Got locations message");
+            var locationsArray = JSON.parse(greeting.body).locations;
+
+            locationsArray.forEach(location => markLocation(location));
         });
     });
 }
@@ -49,7 +70,7 @@ function requestLocations() {
 
         stompClient.send("/app/hello", {}, JSON.stringify(requestObject));
     } else {
-        $("#locations").append("Cannot have start time be after end time.<br/>");
+        $("#locations").append("Cannot have start time be after end time.<br>");
     }
 }
 

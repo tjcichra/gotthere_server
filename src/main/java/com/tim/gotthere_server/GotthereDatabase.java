@@ -3,6 +3,10 @@ package com.tim.gotthere_server;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +33,19 @@ public class GotthereDatabase implements CommandLineRunner {
 			Socket socket = server.accept();
 			new ListenerThread(socket).start();
 		}
+	}
+
+	/**
+	 * Gets a list of locations that inserted 
+	 * @param startDateTime The start date-time in the format of YYYY-MM-DD hh:mm
+	 * @param endDateTime The end date-time in the format of YYYY-MM-DD hh:mm
+	 */
+	public List<Location> getLocations(String startDateTime, String endDateTime) {
+		List<Location> locations = template.query("SELECT * from locations WHERE `insertion_datetime` BETWEEN ? and ?", new String[] {startDateTime, endDateTime}, (rs, rowNum) -> {
+			return new Location(rs.getDouble("bearing"), rs.getDouble("latitude"), rs.getDouble("longitude"), rs.getDouble("speed"), Util.sqlDateTimeToJavaScript(rs.getString("insertion_datetime")));
+		});
+
+		return locations;
 	}
 
 	public class ListenerThread extends Thread {
@@ -65,7 +82,9 @@ public class GotthereDatabase implements CommandLineRunner {
 
 							template.update("INSERT INTO locations (bearing, latitude, longitude, speed) VALUES (?, ?, ?, ?)", bearing, latitude, longitude, speed);
 
-							greeting.autoSendingMessage(bearing, latitude, longitude, speed);
+							SimpleDateFormat formatting = new SimpleDateFormat("YYYY-MM-dd'T'HH:mm");
+							Date d = new Date();
+							greeting.autoSendingMessage(new Location(bearing, latitude, longitude, speed, formatting.format(d)));
 						} else {
 							break;
 						}

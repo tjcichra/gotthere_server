@@ -13,6 +13,11 @@ spec:
       port: 2810
       protocol: TCP
       targetPort: 2810
+    - name: tcp-8080-8080-4rhxr
+      nodePort: 30314
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
   selector:
     k8s-app: gotthere-server
   sessionAffinity: None

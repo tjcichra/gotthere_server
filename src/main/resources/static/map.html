@@ -9,11 +9,37 @@
 		<script src="/webjars/sockjs-client/sockjs.min.js"></script>
 		<script src="/webjars/stomp-websocket/stomp.min.js"></script>
 		<script src="/websocket.js"></script>
+		<script src="/cookies.js"></script>
+
+		<script>
+			if(!getCookie("username") || !getCookie("password")) {
+				window.location.replace("/");
+			}
+		</script>
+
+		<style>
+			#map {
+				width: 1200px;
+				height: 742px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			#controls {
+				text-align: center;
+				font-size: 25px;
+				margin-top: 10px;
+			}
+			input[name=time] {
+				font-size: large;
+				height: 40px;
+			}
+
+		</style>
 
 		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
 	</head>
 	<body>
-		<div id='map' style='width: 400px; height: 300px;'></div>
+		<div id='map'></div>
 		<script>
 			mapboxgl.accessToken = 'pk.eyJ1IjoicmFpbmJvd2x1aWdpMjgxIiwiYSI6ImNrZ2ZxMWE3dTBxZDQyeHBheWUyMXhhamkifQ.asrVZzC3ppQBhZt0R4Bh-A';
 			map = new mapboxgl.Map({
@@ -37,12 +63,14 @@
 			}
 		</script>
 
-		<label for="starttime">Start Time: </label>
-		<input type="datetime-local" id="startdatetime" name="time" onchange="requestLocations()">
-		<label for="endtime">End Time: </label>
-		<input type="datetime-local" id="enddatetime" name="time" onchange="requestLocations()">
-		<label for="follow">Follow: </label>
-		<input type="checkbox" id="follow" name="follow">
+		<div id="controls">
+			<label for="starttime">Start Time: </label>
+			<input type="datetime-local" id="startdatetime" name="time" onchange="requestLocations()">
+			<label for="endtime">End Time: </label>
+			<input type="datetime-local" id="enddatetime" name="time" onchange="requestLocations()">
+			<label for="follow">Follow: </label>
+			<input type="checkbox" id="follow" name="follow">
+		</div>
 
 		<p id="locations">
 			Locations:<br>

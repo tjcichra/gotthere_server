@@ -48,6 +48,15 @@ public class GotthereDatabase implements CommandLineRunner {
 		return locations;
 	}
 
+	public boolean validateLogin(String username, String password) {
+		// WHERE username = '?' AND password = '?'
+		int size = this.template.queryForObject("SELECT COUNT(*) FROM users WHERE username = ? AND password = ?", new String[] {username, password}, Integer.class);
+
+		System.out.println(size);
+
+		return size > 0;
+	}
+
 	public class ListenerThread extends Thread {
 
 		private Socket socket;

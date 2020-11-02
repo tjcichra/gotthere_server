@@ -37,6 +37,12 @@ public class GreetingController {
         return new LocationsResponse(locations);
     }
 
+    @MessageMapping("/hello2")
+    @SendTo("/topic/greetings3")
+    public LoginResponse getLogin(LoginRequest request) throws Exception {
+        return new LoginResponse(this.databaseController.validateLogin(request.getUsername(), request.getPassword()));
+    }
+
     public void autoSendingMessage(Location location) throws Exception {
         Thread.sleep(1000); // simulated delay
         this.template.convertAndSend("/topic/greetings", location);

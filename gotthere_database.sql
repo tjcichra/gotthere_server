@@ -11,5 +11,11 @@ CREATE TABLE locations (
 	speed DECIMAL(5,2)
 );
 
+CREATE TABLE users (
+	id int PRIMARY KEY AUTO_INCREMENT,
+	username VARCHAR(100) NOT NULL,
+	password VARCHAR(100) NOT NULL
+);
+
 CREATE USER 'remote'@'%' IDENTIFIED BY 'test';
 GRANT ALL ON gotthere_database.locations TO 'remote'@'%';

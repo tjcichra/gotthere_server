@@ -45,6 +45,14 @@ function connect() {
 
             locationsArray.forEach(location => markLocation(location));
         });
+
+        stompClient.subscribe('/topic/greetings3', function (greeting) {
+            var loginAccepted = JSON.parse(greeting.body).accepted;
+
+            if(loginAccepted) {
+                setWebsiteCookies();
+            }
+        });
     });
 }
 
@@ -71,6 +79,22 @@ function requestLocations() {
         stompClient.send("/app/hello", {}, JSON.stringify(requestObject));
     } else {
         $("#locations").append("Cannot have start time be after end time.<br>");
+    }
+}
+
+//Gets the start and end date-times and sends them out as a JSON message to the server.
+function requestLogin() {
+    var usernameL = document.getElementById("username").value;
+    var passwordL = document.getElementById("password").value;
+
+    //Only continue if the username and password is not emtpy
+    if(usernameL && passwordL) {
+        var requestObject = {
+            username: usernameL,
+            password: passwordL
+        };
+
+        stompClient.send("/app/hello2", {}, JSON.stringify(requestObject));
     }
 }
 

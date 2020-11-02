@@ -1,10 +1,56 @@
 <!DOCTYPE HTML>
 <html>
-    <head>
-        <title>GotThere Login</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    </head>
-    <body>
-        <h1>PLEASE SIGN IN</h1>
-    </body>
+	<head>
+		<script>
+			var x = document.cookie;
+			console.log(x);
+		</script>
+
+		<script src="/webjars/jquery/jquery.min.js"></script>
+		<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+		<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+		<script src="/websocket.js"></script>
+		<script src="/cookies.js"></script>
+
+		<script>
+			function setWebsiteCookies() {
+				var usernameL = document.getElementById("username").value;
+				var passwordL = document.getElementById("password").value;
+				
+				setCookie("username", usernameL);
+				setCookie("password", passwordL);
+
+				window.location.replace("/map.html");
+			}
+			
+		</script>
+
+		<style>
+			#loginform {
+				text-align: center;
+				font-size: 25px;
+			}
+			input {
+				height: 20px;
+			}
+		</style>
+		
+		<title>GotThere Login</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>
+		<div id="loginform">
+			<label for="username">Username: </label>
+			<input type="text" id="username" name="logininfo">
+			<br>
+			<label for="password">Password: </label>
+			<input type="password" id="password" name="logininfo">
+			<br>
+			<input type="button" id="login" name="loginbutton" value="Login" onclick="requestLogin()">
+		</div>
+
+		<script>
+			connect();
+		</script>
+	</body>
 </html>

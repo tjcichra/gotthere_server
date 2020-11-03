@@ -9,19 +9,32 @@ spec:
   externalTrafficPolicy: Cluster
   ports:
     - name: tcp-2810-2810-4rhxr
-      nodePort: 30313
       port: 2810
       protocol: TCP
       targetPort: 2810
+  selector:
+    k8s-app: gotthere-server
+  sessionAffinity: None
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: gotthere-server
+  name: gotthere-server-http
+  namespace: gotthere
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
     - name: tcp-8080-8080-4rhxr
-      nodePort: 30314
       port: 8080
       protocol: TCP
       targetPort: 8080
   selector:
     k8s-app: gotthere-server
   sessionAffinity: None
-  type: LoadBalancer
+  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment

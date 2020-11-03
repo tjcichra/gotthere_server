@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    k8s-app: gotthere-server
-  name: gotthere-server
+    k8s-app: gotthere
+  name: gotthere
   namespace: gotthere
 spec:
   externalTrafficPolicy: Cluster
@@ -13,7 +13,7 @@ spec:
       protocol: TCP
       targetPort: 2810
   selector:
-    k8s-app: gotthere-server
+    k8s-app: gotthere
   sessionAffinity: None
   type: LoadBalancer
 ---
@@ -21,8 +21,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    k8s-app: gotthere-server
-  name: gotthere-server-http
+    k8s-app: gotthere
+  name: gotthere-http
   namespace: gotthere
 spec:
   externalTrafficPolicy: Cluster
@@ -32,7 +32,7 @@ spec:
       protocol: TCP
       targetPort: 8080
   selector:
-    k8s-app: gotthere-server
+    k8s-app: gotthere
   sessionAffinity: None
   type: NodePort
 ---
@@ -40,14 +40,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    k8s-app: gotthere-server
-  name: gotthere-server
+    k8s-app: gotthere
+  name: gotthere
   namespace: gotthere
 spec:
   replicas: 1
   selector:
     matchLabels:
-      k8s-app: gotthere-server
+      k8s-app: gotthere
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -56,13 +56,13 @@ spec:
   template:
     metadata:
       labels:
-        k8s-app: gotthere-server
-      name: gotthere-server
+        k8s-app: gotthere
+      name: gotthere
     spec:
       containers:
         - image: tjcichra/gotthere_server
           imagePullPolicy: Always
-          name: gotthere-server
+          name: gotthere
           resources: {}
           securityContext:
             privileged: false

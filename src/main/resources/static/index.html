@@ -26,12 +26,41 @@
 		</script>
 
 		<style>
+			@keyframes example {
+				from {
+					margin-top: 0%;
+					opacity: 0;
+				}
+				to {
+					margin-top: 15%;
+					opacity: 1;
+				}
+			}
 			#loginform {
 				text-align: center;
-				font-size: 25px;
+				font-size: 20px;
+				border: 5px solid;
+				border-radius: 20px;
+				margin-left: 35%;
+				margin-right: 35%;
+				animation: example 0.75s forwards ease-out;
+				padding: 1%;
 			}
-			input {
+			.textplace {
+				padding: 2%;
+			}
+			input[name=logininfo] {
 				height: 20px;
+				outline: none;
+				transition: box-shadow 0.3s ease-in-out;
+				border: 1px solid #AAAAAA
+			}
+			input[name=logininfo]:focus {
+				box-shadow: 0px 0px 5px blue;
+			}
+			#login {
+				font-size: 16px;
+				padding: 2px 50px;
 			}
 		</style>
 		
@@ -40,17 +69,48 @@
 	</head>
 	<body>
 		<div id="loginform">
-			<label for="username">Username: </label>
-			<input type="text" id="username" name="logininfo">
-			<br>
-			<label for="password">Password: </label>
-			<input type="password" id="password" name="logininfo">
-			<br>
-			<input type="button" id="login" name="loginbutton" value="Login" onclick="requestLogin()">
+			<p>
+				GotThere Login
+			</p>
+			<div class="textplace">
+				<label for="username">Username: </label>
+				<input type="text" id="username" name="logininfo">
+			</div>
+			<div class="textplace">
+				<label for="password">Password: </label>
+				<input type="password" id="password" name="logininfo">
+			</div>
+			<input type="button" id="login" name="loginbutton" value="Login" onclick="sendLoginInfo()">
 		</div>
 
 		<script>
-			connect();
+			function sendLoginInfo() {
+				var usernameL = document.getElementById("username").value;
+				var passwordL = document.getElementById("password").value;
+
+				var login = {
+					username: usernameL,
+					password: passwordL
+				}
+
+				$.ajax({
+					type: "POST",
+					contentType: "application/json",
+					url: "/login",
+					data: JSON.stringify(login),
+					dataType: 'json',
+					cache: false,
+					timeout: 600000,
+					success: function(data) {
+						if(data.accepted) {
+							setWebsiteCookies();
+						}
+					},
+					error: function(e) {
+						console.log("Error: " + e)
+					}
+				});
+			}
 		</script>
 	</body>
 </html>

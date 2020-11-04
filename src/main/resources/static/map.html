@@ -33,6 +33,16 @@
 				font-size: large;
 				height: 40px;
 			}
+			.marker {
+				background-image: "url(../subaru.png)";
+				width: 50px;
+				height: 50px;
+				display: block;
+				border: none;
+				border-radius: 50%;
+				cursor: pointer;
+				padding: 0;
+			}
 
 		</style>
 
@@ -47,12 +57,11 @@
 				style: 'mapbox://styles/mapbox/satellite-streets-v11'
 			});
 
-			var marker = new mapboxgl.Marker().setLngLat([12.550343, 55.665957]).addTo(map);
-
 			function markLocation(location) {
-				$("#locations").append("" + location.latitude + "," + location.longitude + "<br/>");
+				var el = document.createElement("div");
+				el.className = "marker";
 
-				var popup = new mapboxgl.Popup({ offset: 25 }).setHTML("Bearing: " + location.bearing + "<br>Speed: " + location.speed + "");
+				var popup = new mapboxgl.Popup({ offset: 25 }).setHTML("Time: " + location.dateTime + "<br>Bearing: " + location.bearing + "&#176<br>Speed: " + location.speed + " mph");
 
 				var marker2 = new mapboxgl.Marker().setPopup(popup).setLngLat([location.longitude, location.latitude]).addTo(map);
 				markers.push(marker2);

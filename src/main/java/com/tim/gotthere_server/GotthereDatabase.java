@@ -42,7 +42,7 @@ public class GotthereDatabase implements CommandLineRunner {
 	 */
 	public List<Location> getLocations(String startDateTime, String endDateTime) {
 		List<Location> locations = template.query("SELECT * from locations WHERE `insertion_datetime` BETWEEN ? and ?", new String[] {startDateTime, endDateTime}, (rs, rowNum) -> {
-			return new Location(rs.getDouble("bearing"), rs.getDouble("latitude"), rs.getDouble("longitude"), rs.getDouble("speed"), Util.sqlDateTimeToJavaScript(rs.getString("insertion_datetime")));
+			return new Location(rs.getDouble("bearing"), rs.getDouble("latitude"), rs.getDouble("longitude"), Util.metersPerSecondToMilesPerHour(rs.getDouble("speed")), Util.sqlDateTimeToJavaScript(rs.getString("insertion_datetime")));
 		});
 
 		return locations;

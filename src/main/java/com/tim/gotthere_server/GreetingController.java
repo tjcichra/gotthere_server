@@ -9,9 +9,12 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class GreetingController {
     
     @Autowired
@@ -40,6 +43,11 @@ public class GreetingController {
     @MessageMapping("/hello2")
     @SendTo("/topic/greetings3")
     public LoginResponse getLogin(LoginRequest request) throws Exception {
+        return new LoginResponse(this.databaseController.validateLogin(request.getUsername(), request.getPassword()));
+    }
+
+    @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
+    public LoginResponse loginPost(@RequestBody LoginRequest request) {
         return new LoginResponse(this.databaseController.validateLogin(request.getUsername(), request.getPassword()));
     }
 

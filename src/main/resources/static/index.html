@@ -5,11 +5,8 @@
 			var x = document.cookie;
 			console.log(x);
 		</script>
-
+		
 		<script src="/webjars/jquery/jquery.min.js"></script>
-		<script src="/webjars/sockjs-client/sockjs.min.js"></script>
-		<script src="/webjars/stomp-websocket/stomp.min.js"></script>
-		<script src="/websocket.js"></script>
 		<script src="/cookies.js"></script>
 
 		<script>
@@ -80,21 +77,24 @@
 				<label for="password">Password: </label>
 				<input type="password" id="password" name="logininfo">
 			</div>
-			<input type="button" id="login" name="loginbutton" value="Login" onclick="sendLoginInfo()">
+			<input type="button" id="login" name="loginbutton" value="Login">
+			<p id="errorinfo"></p>
 		</div>
 
 		<script>
-			function sendLoginInfo() {
+			//Runs when the user clicks on "Login"
+			$("#login").click(function() {
 				var usernameL = document.getElementById("username").value;
 				var passwordL = document.getElementById("password").value;
 
+				//Create an object with the username and password to be deserialized
 				var login = {
 					username: usernameL,
 					password: passwordL
 				}
 
-				$.ajax({
-					type: "POST",
+				//Sends a POST request with the username and password to /login
+				$.post({
 					contentType: "application/json",
 					url: "/login",
 					data: JSON.stringify(login),
@@ -102,15 +102,18 @@
 					cache: false,
 					timeout: 600000,
 					success: function(data) {
+						//When it gets a response, check if the login was accepted from the serialized object.
 						if(data.accepted) {
 							setWebsiteCookies();
+						} else {
+							document.getElementById("errorinfo").innerHTML = "ERROR";
 						}
 					},
 					error: function(e) {
 						console.log("Error: " + e)
 					}
 				});
-			}
+			});
 		</script>
 	</body>
 </html>

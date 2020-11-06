@@ -1,6 +1,7 @@
 var stompClient = null;
 var map = null;
 var markers = [];
+var lastMarker = null;
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
@@ -39,6 +40,7 @@ function connect() {
         });
 
         stompClient.subscribe('/topic/greetings2', function (greeting) {
+            lastMarker = null;
             markers.forEach(marker => marker.remove());
             console.log("Got locations message");
             var locationsArray = JSON.parse(greeting.body).locations;

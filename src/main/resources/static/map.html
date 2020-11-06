@@ -34,14 +34,14 @@
 				height: 40px;
 			}
 			.marker {
-				background-image: "url(../subaru.png)";
-				width: 50px;
-				height: 50px;
 				display: block;
-				border: none;
-				border-radius: 50%;
 				cursor: pointer;
 				padding: 0;
+
+				background-image: url("subaru.png");
+				background-size: contain;
+				width: 100px;
+				height: 66px;
 			}
 
 		</style>
@@ -57,14 +57,53 @@
 				style: 'mapbox://styles/mapbox/satellite-streets-v11'
 			});
 
+			var geojson = {
+				'type': 'Feature',
+				'properties': {},
+				'geometry': {
+					'type': 'LineString',
+					'coordinates': [
+					]
+				}
+			};
+
+			map.on("load", function() {
+				map.addSource("lines", {
+					"type": "geojson",
+					'data': geojson
+				});
+
+				map.addLayer({
+					'id': 'lines',
+						'type': 'line',
+						'source': 'lines',
+						'layout': {
+							'line-cap': 'round',
+							'line-join': 'round'
+					},
+					'paint': {
+						'line-color': '#FFFF00',
+						'line-width': 5,
+						'line-opacity': 0.8
+					}
+				});
+			});
+
 			function markLocation(location) {
+				geojson.geometry.coordinates.push([location.longitude, location.latitude]);
+
+				map.getSource("lines").setData(geojson);
 				var el = document.createElement("div");
 				el.className = "marker";
 
+				//Width 500 px by Height 330 px
+
 				var popup = new mapboxgl.Popup({ offset: 25 }).setHTML("Time: " + location.dateTime + "<br>Bearing: " + location.bearing + "&#176<br>Speed: " + location.speed + " mph");
 
-				var marker2 = new mapboxgl.Marker().setPopup(popup).setLngLat([location.longitude, location.latitude]).addTo(map);
+				var marker2 = new mapboxgl.Marker(el).setPopup(popup).setLngLat([location.longitude, location.latitude]).addTo(map);
 				markers.push(marker2);
+				
+
 			}
 
 			function centerMap(location) {

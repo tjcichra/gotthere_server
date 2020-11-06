@@ -46,8 +46,13 @@ public class GreetingController {
         return new LoginResponse(this.databaseController.validateLogin(request.getUsername(), request.getPassword()));
     }
 
-    @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
-    public LoginResponse loginPost(@RequestBody LoginRequest request) {
+    /**
+     * Verifies the username and password. Called when the server recieves a POST request after a user clicks the "Login" button.
+     * @param request The serialized object that contains the username and password sent.
+     * @return A POST response in the form of an object. Spring automatically deserializes it into JSON.
+     */
+    @PostMapping("/login")
+    public LoginResponse verifyLogin(@RequestBody LoginRequest request) {
         return new LoginResponse(this.databaseController.validateLogin(request.getUsername(), request.getPassword()));
     }
 

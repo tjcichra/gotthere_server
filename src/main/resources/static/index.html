@@ -22,44 +22,7 @@
 			
 		</script>
 
-		<style>
-			@keyframes example {
-				from {
-					margin-top: 0%;
-					opacity: 0;
-				}
-				to {
-					margin-top: 15%;
-					opacity: 1;
-				}
-			}
-			#loginform {
-				text-align: center;
-				font-size: 20px;
-				border: 5px solid;
-				border-radius: 20px;
-				margin-left: 35%;
-				margin-right: 35%;
-				animation: example 0.75s forwards ease-out;
-				padding: 1%;
-			}
-			.textplace {
-				padding: 2%;
-			}
-			input[name=logininfo] {
-				height: 20px;
-				outline: none;
-				transition: box-shadow 0.3s ease-in-out;
-				border: 1px solid #AAAAAA
-			}
-			input[name=logininfo]:focus {
-				box-shadow: 0px 0px 5px blue;
-			}
-			#login {
-				font-size: 16px;
-				padding: 2px 50px;
-			}
-		</style>
+		<link href="/css/login.css" rel="stylesheet"/>
 		
 		<title>GotThere Login</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -81,39 +44,6 @@
 			<p id="errorinfo"></p>
 		</div>
 
-		<script>
-			//Runs when the user clicks on "Login"
-			$("#login").click(function() {
-				var usernameL = document.getElementById("username").value;
-				var passwordL = document.getElementById("password").value;
-
-				//Create an object with the username and password to be deserialized
-				var login = {
-					username: usernameL,
-					password: passwordL
-				}
-
-				//Sends a POST request with the username and password to /login
-				$.post({
-					contentType: "application/json",
-					url: "/login",
-					data: JSON.stringify(login),
-					dataType: 'json',
-					cache: false,
-					timeout: 600000,
-					success: function(data) {
-						//When it gets a response, check if the login was accepted from the serialized object.
-						if(data.accepted) {
-							setWebsiteCookies();
-						} else {
-							document.getElementById("errorinfo").innerHTML = "ERROR";
-						}
-					},
-					error: function(e) {
-						console.log("Error: " + e)
-					}
-				});
-			});
-		</script>
+		<script src="/scripts/login.js"></script>
 	</body>
 </html>

@@ -8,7 +8,7 @@
 		<script src="/webjars/jquery/jquery.min.js"></script>
 		<script src="/webjars/sockjs-client/sockjs.min.js"></script>
 		<script src="/webjars/stomp-websocket/stomp.min.js"></script>
-		<script src="/websocket.js"></script>
+		<script src="/scripts/websocket.js"></script>
 		<script src="/cookies.js"></script>
 
 		<script>
@@ -17,127 +17,22 @@
 			}
 		</script>
 
-		<style>
-			#map {
-				width: 1200px;
-				height: 742px;
-				margin-left: auto;
-				margin-right: auto;
-			}
-			#controls {
-				text-align: center;
-				font-size: 25px;
-				margin-top: 10px;
-			}
-			input[name=time] {
-				font-size: large;
-				height: 40px;
-			}
-			.marker {
-				display: block;
-				cursor: pointer;
-				padding: 0;
-
-				background-image: url("subaru.png");
-				background-size: contain;
-				width: 100px;
-				height: 66px;
-			}
-
-		</style>
+		<link href="/css/map.css" rel='stylesheet' />
 
 		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
 	</head>
 	<body>
-		<div id='map'></div>
-		<script>
-			mapboxgl.accessToken = 'pk.eyJ1IjoicmFpbmJvd2x1aWdpMjgxIiwiYSI6ImNrZ2ZxMWE3dTBxZDQyeHBheWUyMXhhamkifQ.asrVZzC3ppQBhZt0R4Bh-A';
-			map = new mapboxgl.Map({
-				container: 'map',
-				style: 'mapbox://styles/mapbox/satellite-streets-v11'
-			});
-
-			var geojson = {
-				'type': 'Feature',
-				'properties': {},
-				'geometry': {
-					'type': 'LineString',
-					'coordinates': [
-					]
-				}
-			};
-
-			map.on("load", function() {
-				map.addSource("lines", {
-					"type": "geojson",
-					'data': geojson
-				});
-
-				map.addLayer({
-					'id': 'lines',
-						'type': 'line',
-						'source': 'lines',
-						'layout': {
-							'line-cap': 'round',
-							'line-join': 'round'
-					},
-					'paint': {
-						'line-color': '#FFFF00',
-						'line-width': 5,
-						'line-opacity': 0.8
-					}
-				});
-			});
-
-			function markLocation(location) {
-				geojson.geometry.coordinates.push([location.longitude, location.latitude]);
-
-				map.getSource("lines").setData(geojson);
-				var el = document.createElement("div");
-				el.className = "marker";
-
-				//Width 500 px by Height 330 px
-
-				var popup = new mapboxgl.Popup({ offset: 25 }).setHTML("Time: " + location.dateTime + "<br>Bearing: " + location.bearing + "&#176<br>Speed: " + location.speed + " mph");
-
-				var marker2 = new mapboxgl.Marker(el).setPopup(popup).setLngLat([location.longitude, location.latitude]).addTo(map);
-				markers.push(marker2);
-				
-
-			}
-
-			function centerMap(location) {
-				map.setCenter([location.longitude, location.latitude]);
-			}
-		</script>
+		<div id="map"></div>
 
 		<div id="controls">
 			<label for="starttime">Start Time: </label>
-			<input type="datetime-local" id="startdatetime" name="time" onchange="requestLocations()">
+			<input type="datetime-local" class="datetime" id="startdatetime" onchange="getLocationsFromDateTimes()">
 			<label for="endtime">End Time: </label>
-			<input type="datetime-local" id="enddatetime" name="time" onchange="requestLocations()">
+			<input type="datetime-local" class="datetime" id="enddatetime" onchange="getLocationsFromDateTimes()">
 			<label for="follow">Follow: </label>
 			<input type="checkbox" id="follow" name="follow">
 		</div>
 
-		<p id="locations">
-			Locations:<br>
-		</p>
-
-		<script>
-			connect();
-
-			var today = new Date();
-
-			//today.getMonth() returns 0-11. "today.getMonth() < 9" is the equivalent to "today.getMonth() + 1 < 10".
-			var monthStringPre = today.getMonth() < 9 ? "0" : "";
-			var dayStringPre = today.getDate() < 10 ? "0" : "";
-
-			var dateString = today.getFullYear() + "-" + monthStringPre + (today.getMonth() + 1) + "-" + dayStringPre + today.getDate();
-
-			console.log(dateString);
-			document.getElementById("startdatetime").defaultValue = dateString + "T00:00:00.00";
-			document.getElementById("enddatetime").defaultValue = dateString + "T23:59:00.00";
-		</script>
+		<script src="/scripts/map.js"></script>
 	</body>
 </html>

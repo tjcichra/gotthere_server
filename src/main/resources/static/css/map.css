@@ -1,0 +1,25 @@
+#map {
+    width: 1200px;
+    height: 742px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#controls {
+    text-align: center;
+    font-size: 25px;
+    margin-top: 10px;
+}
+input[name=time] {
+    font-size: large;
+    height: 40px;
+}
+.marker {
+    display: block;
+    cursor: pointer;
+    padding: 0;
+
+    background-image: url("subaru.png");
+    background-size: contain;
+    width: 100px;
+    height: 66px;
+}

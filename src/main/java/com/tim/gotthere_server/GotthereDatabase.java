@@ -24,7 +24,7 @@ public class GotthereDatabase implements CommandLineRunner {
 	private JdbcTemplate template;
 
 	@Autowired
-	private GreetingController greeting;
+	private WebServerController greeting;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -49,11 +49,7 @@ public class GotthereDatabase implements CommandLineRunner {
 	}
 
 	public boolean validateLogin(String username, String password) {
-		// WHERE username = '?' AND password = '?'
 		int size = this.template.queryForObject("SELECT COUNT(*) FROM users WHERE username = ? AND password = ?", new String[] {username, password}, Integer.class);
-
-		System.out.println(size);
-
 		return size > 0;
 	}
 

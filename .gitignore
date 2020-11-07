@@ -32,3 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 expressions.txt
+src/main/resources/application.properties

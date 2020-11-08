@@ -41,7 +41,7 @@
 				<br>
 				<input type="submit" id="login" value="Login">
 			</form>
-			<p id="errorinfo"></p>
+			<div th:if = "${param.error}">ERROR</div>
 		</div>
 
 		<!--<script src="/scripts/login.js"></script>-->

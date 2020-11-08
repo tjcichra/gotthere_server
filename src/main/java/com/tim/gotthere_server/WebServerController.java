@@ -36,18 +36,12 @@ public class WebServerController {
 		return new LocationsResponse(locations);
 	}
 
-	@MessageMapping("/hello2")
-	@SendTo("/topic/greetings3")
-	public LoginResponse getLogin(LoginRequest request) throws Exception {
-		return new LoginResponse(this.databaseController.validateLogin(request.getUsername(), request.getPassword()));
-	}
-
 	/**
 	 * Verifies the username and password from POST. Called when the server recieves a POST request after a user clicks the "Login" button.
 	 * @param request The serialized object that contains the username and password sent.
 	 * @return An object that tells whether the login was accepted or not. Spring automatically deserializes it into JSON and sends it as a POST response.
 	 */
-	@PostMapping("/login")
+	@PostMapping("/logininfo")
 	public LoginResponse verifyLogin(@RequestBody LoginRequest request) {
 		return new LoginResponse(this.databaseController.validateLogin(request.getUsername(), request.getPassword()));
 	}

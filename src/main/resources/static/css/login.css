@@ -25,13 +25,13 @@ body {
 .textplace {
     padding: 2%;
 }
-input[name=logininfo] {
+input[type=text], input[type=password] {
     height: 20px;
     outline: none;
     transition: box-shadow 0.3s ease-in-out;
     border: 1px solid #AAAAAA
 }
-input[name=logininfo]:focus {
+input[type=text]:focus, input[type=password]:focus {
     box-shadow: 0px 0px 5px blue;
 }
 #login {

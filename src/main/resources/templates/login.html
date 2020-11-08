@@ -1,13 +1,15 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns = "http://www.w3.org/1999/xhtml" 
+	xmlns:th = "http://www.thymeleaf.org" 
+	xmlns:sec = "http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 	<head>
-		<script>
+		<!--<script>
 			var x = document.cookie;
 			console.log(x);
 		</script>
 		
 		<script src="/webjars/jquery/jquery.min.js"></script>
-		<script src="/cookies.js"></script>
+		<script src="/scripts/cookies.js"></script>
 
 		<script>
 			function setWebsiteCookies() {
@@ -20,30 +22,28 @@
 				window.location.replace("/map.html");
 			}
 			
-		</script>
+		</script>-->
 
 		<link href="/css/login.css" rel="stylesheet"/>
 		
 		<title>GotThere Login</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
 	</head>
 	<body>
 		<div id="loginform">
-			<p>
-				GotThere Login
-			</p>
-			<div class="textplace">
+			<p>GotThere Login</p>
+			<form class="textplace" th:action="@{/login}" method="POST">
 				<label for="username">Username: </label>
-				<input type="text" id="username" name="logininfo">
-			</div>
-			<div class="textplace">
+				<input type="text" id="username" name="username">
+				<br>
 				<label for="password">Password: </label>
-				<input type="password" id="password" name="logininfo">
-			</div>
-			<input type="button" id="login" name="loginbutton" value="Login">
+				<input type="password" id="password" name="password">
+				<br>
+				<input type="submit" id="login" value="Login">
+			</form>
 			<p id="errorinfo"></p>
 		</div>
 
-		<script src="/scripts/login.js"></script>
+		<!--<script src="/scripts/login.js"></script>-->
 	</body>
 </html>

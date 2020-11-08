@@ -48,6 +48,14 @@ public class GotthereDatabase implements CommandLineRunner {
 		return locations;
 	}
 
+	public List<LoginInformation> getLoginInformation() {
+		List<LoginInformation> loginInfo = template.query("SELECT * FROM users", new Object[] {}, (rs, rowNum) -> {
+			return new LoginInformation(rs.getString("username"), rs.getString("password"));
+		});
+
+		return loginInfo;
+	}
+
 	public boolean validateLogin(String username, String password) {
 		int size = this.template.queryForObject("SELECT COUNT(*) FROM users WHERE username = ? AND password = ?", new String[] {username, password}, Integer.class);
 		return size > 0;

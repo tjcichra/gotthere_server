@@ -3,35 +3,14 @@
 	xmlns:th = "http://www.thymeleaf.org" 
 	xmlns:sec = "http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 	<head>
-		<!--<script>
-			var x = document.cookie;
-			console.log(x);
-		</script>
-		
-		<script src="/webjars/jquery/jquery.min.js"></script>
-		<script src="/scripts/cookies.js"></script>
-
-		<script>
-			function setWebsiteCookies() {
-				var usernameL = document.getElementById("username").value;
-				var passwordL = document.getElementById("password").value;
-				
-				setCookie("username", usernameL);
-				setCookie("password", passwordL);
-
-				window.location.replace("/map.html");
-			}
-			
-		</script>-->
-
 		<link href="/css/login.css" rel="stylesheet"/>
 		
 		<title>GotThere Login</title>
-		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	</head>
 	<body>
 		<div id="loginform">
-			<p>GotThere Login</p>
+			<div id="title">-GotThere Login-</div>
 			<form class="textplace" th:action="@{/login}" method="POST">
 				<label for="username">Username: </label>
 				<input type="text" id="username" name="username">
@@ -43,7 +22,5 @@
 			</form>
 			<div th:if = "${param.error}">ERROR</div>
 		</div>
-
-		<!--<script src="/scripts/login.js"></script>-->
 	</body>
 </html>

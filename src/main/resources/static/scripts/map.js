@@ -9,19 +9,32 @@ var geojson = {
 	}
 };
 
+//Makes sure the location is valid.
+function validateLocation(location) {
+	return location.latitude >= -90 && location.latitude <= 90 &&
+		location.longitude >= -180 && location.longitude <= 180 &&
+		location.bearing >= 0 && location.speed >= 0;
+}
+
 function markLocation(location) {
-	//Create line on map.
-	geojson.geometry.coordinates.push([location.longitude, location.latitude]);
-	map.getSource("lines").setData(geojson);
+	if(validateLocation(location)) {
+		//Create line on map.
+		geojson.geometry.coordinates.push([location.longitude, location.latitude]);
+		map.getSource("lines").setData(geojson);
 
-	//Create HTML element for marker.
-	var el = document.createElement("div");
-	el.className = "marker";
+		//Create HTML element for marker.
+		var el = document.createElement("div");
+		el.className = "marker";
 
-	//Add marker with information popup.
-	var popup = new mapboxgl.Popup({ offset: 25 }).setHTML("Time: " + location.dateTime + "<br>Bearing: " + location.bearing + "&#176<br>Speed: " + location.speed + " mph");
-	var marker = new mapboxgl.Marker(el).setPopup(popup).setLngLat([location.longitude, location.latitude]).addTo(map);
-	markers.push(marker);
+		//Add marker with information popup.
+		var popup = new mapboxgl.Popup({ offset: 25 }).setHTML("Time: " + location.dateTime + "<br>Bearing: " + location.bearing + "&#176<br>Speed: " + location.speed + " mph");
+		var marker = new mapboxgl.Marker(el).setPopup(popup).setLngLat([location.longitude, location.latitude]).addTo(map);
+
+		el.addEventListener("mouseenter", () => marker.togglePopup());
+		el.addEventListener("mouseleave", () => marker.togglePopup());
+
+		markers.push(marker);
+	}
 }
 
 function removeMarkers() {

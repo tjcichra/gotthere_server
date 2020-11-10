@@ -41,8 +41,8 @@ public class GotthereDatabase implements CommandLineRunner {
 	 * @param endDateTime The end date-time in the format of YYYY-MM-DD hh:mm
 	 */
 	public List<Location> getLocations(String startDateTime, String endDateTime) {
-		List<Location> locations = template.query("SELECT * from locations WHERE `insertion_datetime` BETWEEN ? and ?", new String[] {startDateTime, endDateTime}, (rs, rowNum) -> {
-			return new Location(rs.getDouble("bearing"), rs.getDouble("latitude"), rs.getDouble("longitude"), Util.metersPerSecondToMilesPerHour(rs.getDouble("speed")), Util.sqlDateTimeToJavaScript(rs.getString("insertion_datetime")));
+		List<Location> locations = template.query("SELECT * FROM locations WHERE `real_datetime` BETWEEN ? and ? ORDER BY real_datetime", new String[] {startDateTime, endDateTime}, (rs, rowNum) -> {
+			return new Location(rs.getDouble("bearing"), rs.getDouble("latitude"), rs.getDouble("longitude"), Util.metersPerSecondToMilesPerHour(rs.getDouble("speed")), Util.sqlDateTimeToJavaScript(rs.getString("insertion_datetime")), Util.sqlDateTimeToJavaScript(rs.getString("real_datetime")));
 		});
 
 		return locations;
@@ -75,29 +75,35 @@ public class GotthereDatabase implements CommandLineRunner {
 				InputStream input = socket.getInputStream()
 			) {
 				while(true) {
-					byte buffer[] = new byte[15];
+					byte buffer[] = new byte[20];
 					try {
 						if(input.read(buffer) != -1) {
+							long reconstructed = ((buffer[0] & 0xFF) << 32) | ((buffer[1] & 0xFF) << 24) | ((buffer[2] & 0xFF) << 16) | ((buffer[3] & 0xFF) << 8) | (buffer[4] & 0xFF);
+
+							double latitude = buffer[5] + buffer[6] + (buffer[7] / 100d) + (buffer[8] / 10000d) + (buffer[9] / 1000000d);
+							double longitude = buffer[10] + buffer[11] + (buffer[12] / 100d) + (buffer[13] / 10000d) + (buffer[14] / 1000000d);
+							
+							double speed = buffer[15] + (buffer[16] / 100d);
+
 							double bearing = 0;
-							if(buffer[0] < 0) {
-								bearing = 256 + buffer[0];
+							if(buffer[17] < 0) {
+								bearing = 256 + buffer[17];
 							} else {
-								bearing = buffer[0];
+								bearing = buffer[17];
 							}
-							bearing = bearing + buffer[1];
-							bearing = bearing + (buffer[2] / 100d);
+							bearing = bearing + buffer[18];
+							bearing = bearing + (buffer[19] / 100d);
 
-							double latitude = buffer[3] + buffer[4] + (buffer[5] / 100d) + (buffer[6] / 10000d) + (buffer[7] / 1000000d);
-							double longitude = buffer[8] + buffer[9] + (buffer[10] / 100d) + (buffer[11] / 10000d) + (buffer[12] / 1000000d);
-							double speed = buffer[13] + (buffer[14] / 100d);
+							SimpleDateFormat formatting2 = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+							Date time = new Date(reconstructed * 1000);
+							String ftime = formatting2.format(time);
 
-							System.out.println("Bearing: " + bearing + " Latitude: " + latitude + " Longitude: " + longitude + " Speed: " + speed);
+							System.out.println("Time: " + ftime + " Latitude: " + latitude + " Longitude: " + longitude + "Bearing: " + bearing + " Speed: " + speed);
 
-							template.update("INSERT INTO locations (bearing, latitude, longitude, speed) VALUES (?, ?, ?, ?)", bearing, latitude, longitude, speed);
+							template.update("INSERT INTO locations (bearing, latitude, longitude, speed, real_datetime) VALUES (?, ?, ?, ?, ?)", bearing, latitude, longitude, speed, ftime);
 
-							SimpleDateFormat formatting = new SimpleDateFormat("YYYY-MM-dd'T'HH:mm");
-							Date d = new Date();
-							greeting.autoSendingMessage(new Location(bearing, latitude, longitude, speed, formatting.format(d)));
+							SimpleDateFormat formatting3 = new SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ss");
+							greeting.autoSendingMessage(new Location(bearing, latitude, longitude, speed, formatting3.format(new Date()), formatting3.format(new Date(reconstructed * 1000))));
 						} else {
 							break;
 						}

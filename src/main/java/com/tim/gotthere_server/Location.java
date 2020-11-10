@@ -6,14 +6,16 @@ public class Location {
     private double latitude;
     private double longitude;
     private double speed;
-    private String dateTime;
+    private String insertionDateTime;
+    private String realDateTime;
 
-    public Location(double bearing, double latitude, double longitude, double speed, String dateTime) {
+    public Location(double bearing, double latitude, double longitude, double speed, String insertionDateTime, String realDateTime) {
         this.bearing = bearing;
         this.latitude = latitude;
         this.longitude = longitude;
         this.speed = speed;
-        this.dateTime = dateTime;
+        this.insertionDateTime = insertionDateTime;
+        this.realDateTime = realDateTime;
     }
 
     public double getBearing() {
@@ -48,11 +50,19 @@ public class Location {
         this.speed = speed;
     }
 
-    public String getDateTime() {
-        return this.dateTime;
+    public String getInsertionDateTime() {
+        return this.insertionDateTime;
     }
 
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
+    public void setInsertionDateTime(String insertionDateTime) {
+        this.insertionDateTime = insertionDateTime;
+    }
+
+    public String getRealDateTime() {
+        return this.realDateTime;
+    }
+
+    public void setRealDateTime(String realDateTime) {
+        this.realDateTime = realDateTime;
     }
 }

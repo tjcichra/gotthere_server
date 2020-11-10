@@ -9,6 +9,22 @@ var geojson = {
 	}
 };
 
+function javaScriptDateToFormattedDate(javaScriptDate) {
+	var splitDate = javaScriptDate.split(/-|T|:|\./, 6);
+	var hourInt = parseInt(splitDate[3]);
+
+	var ampm = " PM";
+	if(hourInt < 12) {
+		ampm = " AM"
+	}
+
+	if(hourInt >= 13) {
+		hourInt = hourInt - 12;
+	}
+
+	return splitDate[1] + "/" + splitDate[2] + "/" + splitDate[0] + " " + hourInt + ":" + splitDate[4] + ":" + splitDate[5] + ampm;
+}
+
 //Makes sure the location is valid.
 function validateLocation(location) {
 	return location.latitude >= -90 && location.latitude <= 90 &&
@@ -27,7 +43,7 @@ function markLocation(location) {
 		el.className = "marker";
 
 		//Add marker with information popup.
-		var popup = new mapboxgl.Popup({ offset: 25 }).setHTML("Time: " + location.dateTime + "<br>Bearing: " + location.bearing + "&#176<br>Speed: " + location.speed + " mph");
+		var popup = new mapboxgl.Popup({ offset: 25 }).setHTML("Time: " + javaScriptDateToFormattedDate(location.realDateTime) + "<br>Insertion Time: " + javaScriptDateToFormattedDate(location.insertionDateTime) + "<br>Bearing: " + location.bearing + "&#176<br>Speed: " + location.speed + " mph");
 		var marker = new mapboxgl.Marker(el).setPopup(popup).setLngLat([location.longitude, location.latitude]).addTo(map);
 
 		el.addEventListener("mouseenter", () => marker.togglePopup());
@@ -42,6 +58,7 @@ function removeMarkers() {
 	markers.forEach(marker => marker.remove())
 	markers = [];
 	geojson.geometry.coordinates = [];
+	map.getSource("lines").setData(geojson);
 }
 
 //Method to request all locations between the start date-time and the end date-time.
@@ -67,7 +84,7 @@ function getLocationsFromDateTimes() {
 
 				if(document.getElementById("follow").checked && data.locations.length > 0) {
 					var lastLocation = data.locations[data.locations.length - 1];
-					centerMap(lastLocation);
+					centerMap(lastLocation.latitude, lastLocation.longitude);
 				}
 			},
 			error: function(e) {
@@ -79,8 +96,8 @@ function getLocationsFromDateTimes() {
 	}
 }
 
-function centerMap(location) {
-	map.setCenter([location.longitude, location.latitude]);
+function centerMap(latitude, longitude) {
+	map.setCenter([longitude, latitude]);
 }
 
 //Connect the web socket to recieve real-time location updates.
@@ -96,10 +113,8 @@ var dayStringPre = today.getDate() < 10 ? "0" : "";
 var dateString = today.getFullYear() + "-" + monthStringPre + (today.getMonth() + 1) + "-" + dayStringPre + today.getDate();
 
 //Set the default values of the datetime pickers to the beginning and end of today and request locations.
-document.getElementById("startdatetime").defaultValue = dateString + "T00:00:00.00";
-document.getElementById("enddatetime").defaultValue = dateString + "T23:59:00.00";
-
-getLocationsFromDateTimes();
+document.getElementById("startdatetime").value = dateString + "T00:00:00.00";
+document.getElementById("enddatetime").value = dateString + "T23:59:00.00";
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicmFpbmJvd2x1aWdpMjgxIiwiYSI6ImNrZ2ZxMWE3dTBxZDQyeHBheWUyMXhhamkifQ.asrVZzC3ppQBhZt0R4Bh-A';
 map = new mapboxgl.Map({
@@ -129,6 +144,13 @@ map.on("load", function() {
 			'line-opacity': 0.8
 		}
 	});
+
+	getLocationsFromDateTimes();
 });
 
-//$(".datetime").on("change", getLocationsFromDateTimes);
+$("#follow").change(function() {
+	if(this.checked && markers.length > 0) {
+		lastMarker = markers[markers.length - 1];
+		centerMap(lastMarker.getLngLat().lat, lastMarker.getLngLat().lng);
+	}
+});

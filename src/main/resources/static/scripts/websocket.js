@@ -27,11 +27,11 @@ function connectWebsocket() {
 
             var location = JSON.parse(greeting.body);
 
-            if(location.dateTime >= startDateTimeL && location.dateTime <= endDateTimeL) {
+            if(location.realDateTime >= startDateTimeL && location.realDateTime <= endDateTimeL) {
                 markLocation(location);
 
                 if(document.getElementById("follow").checked) {
-                    centerMap(location);
+                    centerMap(location.latitude, location.longitude);
                 }
             }
             console.log(greeting);

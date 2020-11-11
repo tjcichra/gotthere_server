@@ -4,10 +4,11 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.tim.gotthere_server.pojo.Location;
+import com.tim.gotthere_server.pojo.LoginInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

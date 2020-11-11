@@ -1,4 +1,4 @@
-package com.tim.gotthere_server;
+package com.tim.gotthere_server.pojo;
 
 import java.util.List;
 

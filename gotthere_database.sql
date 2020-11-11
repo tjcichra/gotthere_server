@@ -4,6 +4,7 @@ USE gotthere_database;
 
 CREATE TABLE locations (
 	id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	real_datetime timestamp NULL,
 	insertion_datetime timestamp NOT NULL DEFAULT current_timestamp(),
 	bearing DECIMAL(5,2),
 	latitude DECIMAL(10,6),

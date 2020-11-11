@@ -1,4 +1,4 @@
-package com.tim.gotthere_server;
+package com.tim.gotthere_server.pojo;
 
 public class LocationsRequest {
 	

@@ -2,11 +2,11 @@ package com.tim.gotthere_server;
 
 import java.util.List;
 
+import com.tim.gotthere_server.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,16 +34,6 @@ public class WebServerController {
 
 		List<Location> locations = this.databaseController.getLocations(startDateTime, endDateTime);
 		return new LocationsResponse(locations);
-	}
-
-	/**
-	 * Verifies the username and password from POST. Called when the server recieves a POST request after a user clicks the "Login" button.
-	 * @param request The serialized object that contains the username and password sent.
-	 * @return An object that tells whether the login was accepted or not. Spring automatically deserializes it into JSON and sends it as a POST response.
-	 */
-	@PostMapping("/logininfo")
-	public LoginResponse verifyLogin(@RequestBody LoginRequest request) {
-		return new LoginResponse(this.databaseController.validateLogin(request.getUsername(), request.getPassword()));
 	}
 
 	@PostMapping("/locations")

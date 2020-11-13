@@ -8,7 +8,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,17 +24,15 @@ public class WebServerController {
 	@Autowired
 	private GotthereDatabase databaseController;
 
-	@MessageMapping("/hello")
-	@SendTo("/topic/greetings2")
-	public LocationsResponse greeting(LocationsRequest request) throws Exception {
-		//Converts date-times from YYYY-MM-DDTHH:mm to YYYY-MM-DD HH:mm
-		String startDateTime = Util.javaScriptDateTimeToSQL(request.getStartDateTime());
-		String endDateTime = Util.javaScriptDateTimeToSQL(request.getEndDateTime());
-
-		List<Location> locations = this.databaseController.getLocations(startDateTime, endDateTime);
-		return new LocationsResponse(locations);
-	}
-
+	/**
+	 * Used by a browser to request all locations within the start date-time and the end date-time.
+	 * A browser needs to send a POST request to the url /locations?startDateTime={startDateTime}&endDateTime={endDateTime}
+	 * where the words in brackets are replaced by the corresponding value in the format of YYYY-MM-DDTHH:mm.
+	 *
+	 * @param startDateTime The start date-time for requesting the locations in the format of YYYY-MM-DDTHH:mm.
+	 * @param endDateTime The start date-time for requesting the locations in the format of YYYY-MM-DDTHH:mm.
+	 * @return An object containing all the locations between the two date-times that will be deserialized into JSON and sent as a POST response.
+	 */
 	@PostMapping("/locations")
 	public LocationsResponse getLocationsFromDateTimes(@RequestParam String startDateTime, @RequestParam String endDateTime) {
 		//Converts date-times from YYYY-MM-DDTHH:mm to YYYY-MM-DD HH:mm
@@ -46,7 +43,12 @@ public class WebServerController {
 		return new LocationsResponse(locations);
 	}
 
-	public void autoSendingMessage(Location location) throws Exception {
+	/**
+	 * Sends location data to all browsers via a websocket. The websocket on the browser side retrieves it and adds it to the map.
+	 *
+	 * @param location The location to send to the websocket.
+	 */
+	public void autoSendingMessage(Location location) {
 		this.template.convertAndSend("/topic/greetings", location);
 	}
 }

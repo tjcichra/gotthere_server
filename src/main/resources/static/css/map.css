@@ -23,3 +23,7 @@ input[name=time] {
     width: 75px;
     height: 49.5px;
 }
+#latest {
+    width: 100px;
+    height: 66px;
+}

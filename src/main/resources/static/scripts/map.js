@@ -38,9 +38,15 @@ function markLocation(location) {
 		geojson.geometry.coordinates.push([location.longitude, location.latitude]);
 		map.getSource("lines").setData(geojson);
 
+		if(markers.length > 0) {
+		    lastMarker = markers[markers.length - 1];
+		    lastMarker.getElement().removeAttribute("id");
+		}
+
 		//Create HTML element for marker.
 		var el = document.createElement("div");
 		el.className = "marker";
+		el.id = "latest";
 
 		//Add marker with information popup.
 		var popup = new mapboxgl.Popup({ offset: 25 }).setHTML("Time: " + javaScriptDateToFormattedDate(location.realDateTime) + "<br>Insertion Time: " + javaScriptDateToFormattedDate(location.insertionDateTime) + "<br>Bearing: " + location.bearing + "&#176<br>Speed: " + location.speed + " mph");
@@ -97,7 +103,10 @@ function getLocationsFromDateTimes() {
 }
 
 function centerMap(latitude, longitude) {
-	map.setCenter([longitude, latitude]);
+    map.panTo([longitude, latitude], {
+        duration: 1500
+    });
+	//map.setCenter([longitude, latitude]);
 }
 
 //Connect the web socket to recieve real-time location updates.
@@ -130,20 +139,27 @@ map.on("load", function() {
 		'data': geojson
 	});
 
-	map.addLayer({
-		'id': 'lines',
-			'type': 'line',
-			'source': 'lines',
-			'layout': {
-				'line-cap': 'round',
-				'line-join': 'round'
-		},
-		'paint': {
-			'line-color': '#FFFF00',
-			'line-width': 5,
-			'line-opacity': 0.8
-		}
+	map.loadImage("line.png", function(err, image) {
+	    map.addImage("lineimage", image);
+
+	    map.addLayer({
+        		'id': 'lines',
+        			'type': 'line',
+        			'source': 'lines',
+        			'layout': {
+        				'line-cap': 'round',
+        				'line-join': 'round'
+        		},
+        		'paint': {
+        			'line-color': '#FFFF00',
+        			'line-width': 30,
+        			'line-opacity': 0.8,
+        			'line-pattern': 'lineimage'
+        		}
+        	});
 	});
+
+
 
 	getLocationsFromDateTimes();
 });

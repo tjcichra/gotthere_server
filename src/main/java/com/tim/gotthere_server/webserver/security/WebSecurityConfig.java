@@ -1,5 +1,6 @@
-package com.tim.gotthere_server;
+package com.tim.gotthere_server.webserver.security;
 
+import com.tim.gotthere_server.database.GotthereDatabase;
 import com.tim.gotthere_server.pojo.LoginInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.tim.gotthere_server;
+package com.tim.gotthere_server.webserver;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

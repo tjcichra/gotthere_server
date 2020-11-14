@@ -1,11 +1,11 @@
-package com.tim.gotthere_server;
+package com.tim.gotthere_server.webserver;
 
 import java.util.List;
 
+import com.tim.gotthere_server.Util;
+import com.tim.gotthere_server.database.GotthereDatabase;
 import com.tim.gotthere_server.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +26,7 @@ public class WebServerController {
 
 	/**
 	 * Used by a browser to request all locations within the start date-time and the end date-time.
-	 * A browser needs to send a POST request to the url /locations?startDateTime={startDateTime}&endDateTime={endDateTime}
+	 * A browser needs to send a POST request to the url <b>/locations?startDateTime={startDateTime}&endDateTime={endDateTime}</b>
 	 * where the words in brackets are replaced by the corresponding value in the format of YYYY-MM-DDTHH:mm.
 	 *
 	 * @param startDateTime The start date-time for requesting the locations in the format of YYYY-MM-DDTHH:mm.

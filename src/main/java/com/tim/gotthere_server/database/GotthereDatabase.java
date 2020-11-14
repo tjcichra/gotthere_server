@@ -1,4 +1,4 @@
-package com.tim.gotthere_server;
+package com.tim.gotthere_server.database;
 
 import java.io.InputStream;
 import java.net.ServerSocket;
@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.tim.gotthere_server.Util;
+import com.tim.gotthere_server.webserver.WebServerController;
 import com.tim.gotthere_server.pojo.Location;
 import com.tim.gotthere_server.pojo.LoginInformation;
 import org.slf4j.Logger;

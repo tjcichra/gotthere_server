@@ -1,7 +1,7 @@
 package com.tim.gotthere_server.webserver.security;
 
-import com.tim.gotthere_server.database.GotthereDatabase;
-import com.tim.gotthere_server.pojo.LoginInformation;
+import com.tim.gotthere_server.database.UserRepository;
+import com.tim.gotthere_server.database.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,9 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
-	private GotthereDatabase databaseController;
+	private UserRepository userRepository;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> conf = auth.inMemoryAuthentication();
-		for(LoginInformation li : databaseController.getLoginInformation()) {
+		for(User li : userRepository.findAll()) {
 			conf.withUser(li.getUsername()).password("{noop}" + li.getPassword()).roles("USER");
 		}
 	}

@@ -23,6 +23,9 @@ input[name=time] {
     width: 75px;
     height: 49.5px;
 }
+.popuptext {
+    font-size: large;
+}
 #latest {
     width: 100px;
     height: 66px;

@@ -49,7 +49,7 @@ function markLocation(location) {
 		el.id = "latest";
 
 		//Add marker with information popup.
-		var popup = new mapboxgl.Popup({ offset: 25 }).setHTML("Time: " + javaScriptDateToFormattedDate(location.realDateTime) + "<br>Insertion Time: " + javaScriptDateToFormattedDate(location.insertionDateTime) + "<br>Bearing: " + location.bearing + "&#176<br>Speed: " + location.speed + " mph");
+		var popup = new mapboxgl.Popup({ offset: 25 }).setHTML("<span class=\"popuptext\">Time: " + javaScriptDateToFormattedDate(location.dateTime) + "<br>Insertion Time: " + javaScriptDateToFormattedDate(location.insertionDateTime) + "<br>Bearing: " + location.bearing + "&#176<br>Speed: " + (location.speed * 2.23694) + " mph</span>");
 		var marker = new mapboxgl.Marker(el).setPopup(popup).setLngLat([location.longitude, location.latitude]).addTo(map);
 
 		el.addEventListener("mouseenter", () => marker.togglePopup());
@@ -83,13 +83,14 @@ function getLocationsFromDateTimes() {
 			dataType: "json",
 			cache: false,
 			timeout: 600000,
-			success: function(data) {
+			success: function(locations) {
 				//Remove current markers and add markers from response object.
+				console.log(locations);
 				removeMarkers();
-				data.locations.forEach(location => markLocation(location));
+				locations.forEach(location => markLocation(location));
 
-				if(document.getElementById("follow").checked && data.locations.length > 0) {
-					var lastLocation = data.locations[data.locations.length - 1];
+				if(document.getElementById("follow").checked && locations.length > 0) {
+					var lastLocation = locations[data.locations.length - 1];
 					centerMap(lastLocation.latitude, lastLocation.longitude);
 				}
 			},

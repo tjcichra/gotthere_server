@@ -2,9 +2,7 @@ package com.tim.gotthere_server;
 
 public class Util {
 	
-	private Util() {
-
-	}
+	private Util() {}
 
 	public static String sqlDateTimeToJavaScript(String sqlDateTime) {
 		return sqlDateTime.replace(' ', 'T');

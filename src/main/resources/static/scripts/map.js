@@ -68,7 +68,7 @@ function removeMarkers() {
 }
 
 //Method to request all locations between the start date-time and the end date-time.
-function getLocationsFromDateTimes() {
+function getLocationsFromDateTimes(forceFollow) {
 	var startDateTimeValue = $("#startdatetime").val();
 	var endDateTimeValue = $("#enddatetime").val();
 
@@ -85,12 +85,11 @@ function getLocationsFromDateTimes() {
 			timeout: 600000,
 			success: function(locations) {
 				//Remove current markers and add markers from response object.
-				console.log(locations);
 				removeMarkers();
 				locations.forEach(location => markLocation(location));
 
-				if(document.getElementById("follow").checked && locations.length > 0) {
-					var lastLocation = locations[data.locations.length - 1];
+				if((forceFollow || document.getElementById("follow").checked) && locations.length > 0) {
+					var lastLocation = locations[locations.length - 1];
 					centerMap(lastLocation.latitude, lastLocation.longitude);
 				}
 			},
@@ -132,8 +131,6 @@ map = new mapboxgl.Map({
 	style: 'mapbox://styles/mapbox/satellite-streets-v11'
 });
 
-
-
 map.on("load", function() {
 	map.addSource("lines", {
 		"type": "geojson",
@@ -160,9 +157,23 @@ map.on("load", function() {
         	});
 	});
 
-
-
-	getLocationsFromDateTimes();
+	//Request locations
+    $.post({
+        url: "/startDateTimeNumber?locationNumber=5",
+        dataType: "json",
+        cache: false,
+        timeout: 600000,
+        success: function(startDateTime) {
+            if(startDateTime != null){
+                var formattedStartDateTime = startDateTime.substring(0, 16);
+                document.getElementById("startdatetime").value = formattedStartDateTime;
+                getLocationsFromDateTimes(true);
+            }
+        },
+        error: function(e) {
+            console.log("Error: " + e)
+        }
+    });
 });
 
 $("#follow").change(function() {

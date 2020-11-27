@@ -12,5 +12,8 @@ import java.util.List;
 public interface LocationRepository extends JpaRepository<Location, Integer> {
 
 	@Query("SELECT l FROM Location l WHERE l.dateTime BETWEEN :startDateTime AND :endDateTime ORDER BY dateTime")
-	public List<Location> findLocationsBetweenDates(@Param("startDateTime") Date startDateTime, @Param("endDateTime") Date endDateTime);
+	List<Location> findLocationsBetweenDates(@Param("startDateTime") Date startDateTime, @Param("endDateTime") Date endDateTime);
+
+	@Query("SELECT l.dateTime FROM Location l ORDER BY l.dateTime DESC")
+	List<Date> getDateOfPastLocations();
 }

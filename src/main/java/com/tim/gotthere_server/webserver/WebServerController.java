@@ -6,18 +6,20 @@ import com.tim.gotthere_server.database.LocationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
  * This "bean" manages all RESTful and WebSocket communications.
- * Lombok will automatically generate a constructor that allows Spring to inject the "beans" for the location repository and the simple messaging template.
+ * Lombok will automatically generate a constructor that allows Spring to inject the "beans" for the location repository,
+ * the bookmark repository, and the simple messaging template into the fields.
  * @author Timothy Cichra
  */
 @RestController
@@ -44,12 +46,29 @@ public class WebServerController {
 		return this.locationRepository.findLocationsBetweenDates(sdf.parse(startDateTime), sdf.parse(endDateTime));
 	}
 
+	@PostMapping("/startDateTimeNumber")
+	public Date getStartTimeDateOfPastLocations(@RequestParam Integer locationNumber) {
+		if (locationNumber != null) {
+			List<Date> dateOfPastLocations = this.locationRepository.getDateOfPastLocations();
+			Calendar cal = Calendar.getInstance();
+			if(dateOfPastLocations.size() >= locationNumber) {
+				cal.setTime(dateOfPastLocations.get(locationNumber - 1));
+			} else {
+				cal.setTime(dateOfPastLocations.get(dateOfPastLocations.size() - 1));
+			}
+			cal.add(Calendar.HOUR, -5);
+			return cal.getTime();
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 * Sends location data to all open browsers via a WebSocket. The WebSocket on the browser side retrieves it and adds it to the map.
 	 *
 	 * @param location The location to send to the WebSocket. It should be the latest location.
 	 */
 	public void sendLocationThroughWebSocket(Location location) {
-		this.simpMessagingTemplate.convertAndSend("/topic/greetings", location);
+		this.simpMessagingTemplate.convertAndSend("/web-socket/location", location);
 	}
 }

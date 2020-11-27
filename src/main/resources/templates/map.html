@@ -7,9 +7,10 @@
 
 		<script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
 		<link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
-		<script src="/webjars/jquery/jquery.min.js"></script>
-		<script src="/webjars/sockjs-client/sockjs.min.js"></script>
-		<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@6.0.0/bundles/stomp.umd.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.0/dist/sockjs.min.js"></script>
+		<!--Add SockJS Later-->
 		<script src="/scripts/websocket.js"></script>
 
 		<link href="/css/map.css" rel='stylesheet' />
@@ -21,9 +22,9 @@
 
 		<div id="controls">
 			<label for="starttime">Start Time: </label>
-			<input type="datetime-local" class="datetime" id="startdatetime" onchange="getLocationsFromDateTimes()">
+			<input type="datetime-local" class="datetime" id="startdatetime" onchange="getLocationsFromDateTimes(false)">
 			<label for="endtime">End Time: </label>
-			<input type="datetime-local" class="datetime" id="enddatetime" onchange="getLocationsFromDateTimes()">
+			<input type="datetime-local" class="datetime" id="enddatetime" onchange="getLocationsFromDateTimes(false)">
 			<label for="follow">Follow: </label>
 			<input type="checkbox" id="follow" name="follow">
 		</div>

@@ -2,21 +2,21 @@ CREATE DATABASE gotthere_database;
 
 USE gotthere_database;
 
-CREATE TABLE locations (
-	id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	real_datetime timestamp NULL,
-	insertion_datetime timestamp NOT NULL DEFAULT current_timestamp(),
-	bearing DECIMAL(5,2),
-	latitude DECIMAL(10,6),
-	longitude DECIMAL(10,6),
-	speed DECIMAL(5,2)
+--Change existing database to jpa database
+INSERT INTO location (bearing, date_time, insertion_date_time, latitude, longitude, speed)
+SELECT bearing, real_datetime, insertion_datetime, latitude, longitude, speed
+FROM locations;
+
+CREATE TABLE `user` (
+	id int(11) PRIMARY KEY AUTO_INCREMENT,
+	username VARCHAR(255) NOT NULL,
+	password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE users (
-	id int PRIMARY KEY AUTO_INCREMENT,
-	username VARCHAR(100) NOT NULL,
-	password VARCHAR(100) NOT NULL
-);
+--Change existing database to jpa database
+INSERT INTO `user` (username, password)
+SELECT username, password
+FROM users;
 
 CREATE USER 'remote'@'%' IDENTIFIED BY 'test';
 GRANT ALL ON gotthere_database.locations TO 'remote'@'%';

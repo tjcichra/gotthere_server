@@ -1,0 +1,26 @@
+version: "2.1"
+services:
+  mariadb:
+    image: ghcr.io/linuxserver/mariadb
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MYSQL_ROOT_PASSWORD=test
+      - TZ=America/New_York
+      - MYSQL_DATABASE=gotthere_database
+      - MYSQL_USER=remote
+      - MYSQL_PASSWORD=test
+    ports:
+      - 3333:3306
+    volumes:
+      - "${PWD}/initdb.d/:/config/initdb.d/"
+    restart: unless-stopped
+  gotthere:
+    build: .
+    command: "bash -c 'sleep 10 && java -jar -Dspring.datasource.url=jdbc:mariadb://mariadb:3306/gotthere_database gotthere_server-0.0.1-SNAPSHOT.jar'"
+    restart: unless-stopped
+    ports:
+      - 2810:2810/udp
+      - 8080:8080
+    depends_on:
+      - mariadb

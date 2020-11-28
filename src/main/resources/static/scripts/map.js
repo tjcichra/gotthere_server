@@ -35,8 +35,10 @@ function validateLocation(location) {
 function markLocation(location) {
 	if(validateLocation(location)) {
 		//Create line on map.
-		geojson.geometry.coordinates.push([location.longitude, location.latitude]);
-		map.getSource("lines").setData(geojson);
+		if(map.loaded()) {
+			geojson.geometry.coordinates.push([location.longitude, location.latitude]);
+			map.getSource("lines").setData(geojson);
+		}
 
 		if(markers.length > 0) {
 		    lastMarker = markers[markers.length - 1];
@@ -49,7 +51,7 @@ function markLocation(location) {
 		el.id = "latest";
 
 		//Add marker with information popup.
-		var popup = new mapboxgl.Popup({ offset: 25 }).setHTML("<span class=\"popuptext\">Time: " + javaScriptDateToFormattedDate(location.dateTime) + "<br>Insertion Time: " + javaScriptDateToFormattedDate(location.insertionDateTime) + "<br>Bearing: " + location.bearing + "&#176<br>Speed: " + (location.speed * 2.23694) + " mph</span>");
+		var popup = new mapboxgl.Popup({offset: 25, maxWidth: "none"}).setHTML("<span class=\"popuptext\">Time: " + javaScriptDateToFormattedDate(location.dateTime) + "<br>Speed: " + (location.speed * 2.23694) + " mph<br>Bearing: " + location.bearing + "&#176<br>Insertion Time: " + javaScriptDateToFormattedDate(location.insertionDateTime) + "</span>");
 		var marker = new mapboxgl.Marker(el).setPopup(popup).setLngLat([location.longitude, location.latitude]).addTo(map);
 
 		el.addEventListener("mouseenter", () => marker.togglePopup());
@@ -64,7 +66,9 @@ function removeMarkers() {
 	markers.forEach(marker => marker.remove())
 	markers = [];
 	geojson.geometry.coordinates = [];
-	map.getSource("lines").setData(geojson);
+	if(map.loaded()) {
+		map.getSource("lines").setData(geojson);
+	}
 }
 
 //Method to request all locations between the start date-time and the end date-time.
@@ -157,23 +161,28 @@ map.on("load", function() {
         	});
 	});
 
-	//Request locations
-    $.post({
-        url: "/startDateTimeNumber?locationNumber=5",
-        dataType: "json",
-        cache: false,
-        timeout: 600000,
-        success: function(startDateTime) {
-            if(startDateTime != null){
-                var formattedStartDateTime = startDateTime.substring(0, 16);
-                document.getElementById("startdatetime").value = formattedStartDateTime;
-                getLocationsFromDateTimes(true);
-            }
-        },
-        error: function(e) {
-            console.log("Error: " + e)
+	markers.forEach(m => {
+		geojson.geometry.coordinates.push([m.getLngLat().lng, m.getLngLat().lat]);
+        map.getSource("lines").setData(geojson);
+	});
+});
+
+//Request locations
+$.post({
+    url: "/startDateTimeNumber?locationNumber=5",
+    dataType: "json",
+    cache: false,
+    timeout: 600000,
+    success: function(startDateTime) {
+        if(startDateTime != null){
+            var formattedStartDateTime = startDateTime.substring(0, 16);
+            document.getElementById("startdatetime").value = formattedStartDateTime;
+            getLocationsFromDateTimes(true);
         }
-    });
+    },
+    error: function(e) {
+        console.log("Error: " + e)
+    }
 });
 
 $("#follow").change(function() {

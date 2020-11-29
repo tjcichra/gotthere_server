@@ -23,7 +23,7 @@ import java.util.List;
  * @author Timothy Cichra
  */
 @RestController
-@AllArgsConstructor(onConstructor = @__({@Autowired}))
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class WebServerController {
 
 	private final LocationRepository locationRepository;

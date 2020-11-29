@@ -17,16 +17,23 @@ input[name=time] {
     display: block;
     cursor: pointer;
     padding: 0;
-
-    background-image: url("subaru.png");
     background-size: contain;
-    width: 75px;
-    height: 49.5px;
+}
+.caricon {
+    background-image: url("caricon.png");
+    width: 40px;
+    height: 40px;
+}
+.bikeicon {
+    background-image: url("bikeicon.png");
+    width: 40px;
+	height: 23px;
 }
 .popuptext {
     font-size: large;
 }
 #latest {
-    width: 100px;
-    height: 66px;
+	background-image: url("subaru.png");
+    width: 80px;
+    height: 52.8px;
 }

@@ -1,13 +1,15 @@
 var stompClient = null;
 
 function connectWebsocket() {
-    var port = location.port;
+	var protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+
+    var port = window.location.port;
     if(port) {
         port = ":" + port;
     }
 
     stompClient = new StompJs.Client({
-        brokerURL: "ws://" + window.location.hostname + port + "/web-socket-stomp",
+        brokerURL: protocol + "//" + window.location.hostname + port + "/web-socket-stomp",
         debug: function (str) {
             console.log(str);
         },

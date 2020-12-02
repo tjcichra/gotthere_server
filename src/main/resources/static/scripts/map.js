@@ -1,4 +1,5 @@
 var markers = [];
+var loaded = false;
 
 var geojson = {
 	'type': 'Feature',
@@ -35,7 +36,7 @@ function validateLocation(location) {
 function markLocation(location) {
 	if(validateLocation(location)) {
 		//Create line on map.
-		if(map.loaded()) {
+		if(loaded) {
 			geojson.geometry.coordinates.push([location.longitude, location.latitude]);
 			map.getSource("lines").setData(geojson);
 		}
@@ -68,7 +69,7 @@ function removeMarkers() {
 	markers.forEach(marker => marker.remove())
 	markers = [];
 	geojson.geometry.coordinates = [];
-	if(map.loaded()) {
+	if(loaded) {
 		map.getSource("lines").setData(geojson);
 	}
 }
@@ -167,6 +168,8 @@ map.on("load", function() {
 		geojson.geometry.coordinates.push([m.getLngLat().lng, m.getLngLat().lat]);
         map.getSource("lines").setData(geojson);
 	});
+
+	loaded = true;
 });
 
 //Request locations

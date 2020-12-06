@@ -54,7 +54,7 @@ function markLocation(location) {
 		el.className += (location.speed * 2.23694) < 5 ? " bikeicon" : " caricon";
 
 		//Add marker with information popup.
-		var popup = new mapboxgl.Popup({offset: 25, maxWidth: "none"}).setHTML("<span class=\"popuptext\">Time: " + javaScriptDateToFormattedDate(location.dateTime) + "<br>Speed: " + (location.speed * 2.23694) + " mph<br>Bearing: " + location.bearing + "&#176<br>Insertion Time: " + javaScriptDateToFormattedDate(location.insertionDateTime) + "</span>");
+		var popup = new mapboxgl.Popup({offset: 25, maxWidth: "none"}).setHTML("<span class=\"popuptext\">Time: " + javaScriptDateToFormattedDate(location.dateTime) + "<br>Speed: " + (location.speed * 2.23694).toFixed(1) + " mph<br>Bearing: " + location.bearing + "&#176<br>Insertion Time: " + javaScriptDateToFormattedDate(location.insertionDateTime) + "</span>");
 		var marker = new mapboxgl.Marker(el).setPopup(popup).setLngLat([location.longitude, location.latitude]).addTo(map);
 
 		el.addEventListener("mouseenter", () => marker.togglePopup());

@@ -32,7 +32,7 @@ jobs:
         run: mvn -B package --file pom.xml
       - uses: actions/upload-artifact@v2
         # only upload the artifact once
-        if: $ {{ matrix.dockerfile == "Dockerfile" }}
+        if: $ {{ matrix.dockerfile == 'Dockerfile' }}
         with:
           name: gotthere_server-0.0.1-SNAPSHOT
           path: target/

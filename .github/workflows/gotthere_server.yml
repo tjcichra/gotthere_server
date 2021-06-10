@@ -37,7 +37,20 @@ jobs:
       - name: Prepare Docker
         id: prep
         run: |
-          DOCKER_IMAGE=tjcichra/gotthere_server
+          dockerfile=${{ matrix.dockerfile }}
+          if [[ $dockerfile == "Dockerfile.armv7" ]];then
+            platform="linux/arm/v7"
+            suffix="-armv7"
+          fi
+          if [[ $dockerfile == "Dockerfile.arm64" ]];then
+            platform="linux/arm64"
+            suffix="-arm64"
+          fi
+          if [[ $dockerfile == "Dockerfile" ]];then
+            platform="linux/amd64"
+            suffix=""
+          fi
+          DOCKER_IMAGE="tjcichra/gotthere_server${suffix}"
           VERSION=noop
           if [ "${{ github.event_name }}" = "schedule" ]; then
             VERSION=nightly
@@ -58,16 +71,6 @@ jobs:
             TAGS="$TAGS,${DOCKER_IMAGE}:${MINOR},${DOCKER_IMAGE}:${MAJOR},${DOCKER_IMAGE}:latest"
           elif [ "${{ github.event_name }}" = "push" ]; then
             TAGS="$TAGS,${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}"
-          fi
-          dockerfile=${{ matrix.dockerfile }}
-          if [[ $dockerfile == "Dockerfile.armv7" ]];then
-            platform="linux/arm/v7"
-          fi
-          if [[ $dockerfile == "Dockerfile.arm64" ]];then
-            platform="linux/arm64"
-          fi
-          if [[ $dockerfile == "Dockerfile" ]];then
-            platform="linux/amd64"
           fi
           echo ::set-output name=version::${VERSION}
           echo ::set-output name=tags::${TAGS}

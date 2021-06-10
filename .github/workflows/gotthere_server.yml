@@ -42,11 +42,11 @@ jobs:
           dockerfile=${{ matrix.dockerfile }}
           if [[ $dockerfile == "Dockerfile.armv7" ]];then
             platform="linux/arm/v7"
-            suffix="-armv7"
+            suffix="_armv7"
           fi
           if [[ $dockerfile == "Dockerfile.arm64" ]];then
             platform="linux/arm64"
-            suffix="-arm64"
+            suffix="_arm64"
           fi
           if [[ $dockerfile == "Dockerfile" ]];then
             platform="linux/amd64"

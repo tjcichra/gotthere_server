@@ -37,8 +37,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder> conf = auth.inMemoryAuthentication();
+//		User tim = new User();
+//		tim.setUsername("tim");
+//		tim.setPassword("test");
+//
+//		userRepository.save(tim);
+
 		for(User li : userRepository.findAll()) {
 			conf.withUser(li.getUsername()).password("{noop}" + li.getPassword()).roles("USER");
+			System.out.println(li.getUsername() + " " + li.getPassword());
 		}
 	}
 }

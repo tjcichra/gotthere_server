@@ -23,14 +23,20 @@ import java.util.List;
  * @author Timothy Cichra
  */
 @RestController
-@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class WebServerController {
 
 	private final LocationRepository locationRepository;
 
 	private final BookmarkRepository bookmarkRepository;
 
-	private final SimpMessagingTemplate simpMessagingTemplate;
+	private final SimpMessagingTemplate simpMessagingTemplate;	
+
+	@Autowired
+	public WebServerController(LocationRepository locationRepository, BookmarkRepository bookmarkRepository, SimpMessagingTemplate simpMessagingTemplate) {
+		this.locationRepository = locationRepository;
+		this.bookmarkRepository = bookmarkRepository;
+		this.simpMessagingTemplate = simpMessagingTemplate;
+	}
 
 	/**
 	 * Used by a browser to request all locations within the start date-time and the end date-time.
